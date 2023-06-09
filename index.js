@@ -7,10 +7,6 @@ const port = process.env.PORT || 5000;
 app.use(cors())
 app.use(express.json())
 
-// dbuser= toyWorld
-// bdpass=CeDr8OKos5x0igtO
-
-
 
 const uri = `mongodb+srv://toyWorld:CeDr8OKos5x0igtO@cluster0.dgcetkk.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -31,6 +27,14 @@ async function run() {
     const categoryItem = client.db('toyWorld').collection('category')
 
     const categoryDetails = client.db('toyWorld').collection('categoryDetails')
+
+    const addAToy = client.db('toyWorld').collection('addAToy');
+
+    app.post('/addAToy', async (req, res) =>{
+        const singleToy = req.body;
+        const result = await addAToy.insertOne(singleToy)
+        res.send(result)
+    })
 
     app.get('/category', async (req, res)=>{
       const category = await categoryItem.find({}).toArray();
