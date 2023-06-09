@@ -30,8 +30,15 @@ async function run() {
 
     const categoryItem = client.db('toyWorld').collection('category')
 
-    app.get('/categorys', async (req, res)=>{
+    const categoryDetails = client.db('toyWorld').collection('categoryDetails')
+
+    app.get('/category', async (req, res)=>{
       const category = await categoryItem.find({}).toArray();
+      res.send(category);
+    })
+
+    app.get('/categoryDetails', async (req, res)=>{
+      const category = await categoryDetails.find({}).toArray();
       res.send(category);
     })
 
