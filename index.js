@@ -1,9 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-require('dotenv').config();
-const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+require("dotenv").config();
 const port = process.env.PORT || 5000;
+
+const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -21,20 +22,12 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
 
     const categoryItem = client.db("toyWorld").collection("category");
 
     const categoryDetails = client.db("toyWorld").collection("categoryDetails");
 
     const addAToy = client.db("toyWorld").collection("addAToy");
-
-    app.post("/addAToy", async (req, res) => {
-      const singleToy = req.body;
-      const result = await addAToy.insertOne(singleToy);
-      res.send(result);
-    });
 
     app.get("/addAToy", async (req, res) => {
       const allToys = await addAToy.find({}).toArray();
@@ -67,6 +60,12 @@ async function run() {
       res.send(user);
     });
 
+    app.post("/addAToy", async (req, res) => {
+      const singleToy = req.body;
+      const result = await addAToy.insertOne(singleToy);
+      res.send(result);
+    });
+
     app.put("/myToys/:id", async (req, res) => {
       const id = req.params.id;
       const update = req.body;
@@ -78,14 +77,13 @@ async function run() {
           quantity: update.quantity,
           description: update.description
         }
-      }
+      };
       const result = await addAToy.updateOne(filter, updatedToys, options);
-      res.send(result)
+      res.send(result);
     });
 
     app.delete("/myToys/:id", async (req, res) => {
       const id = req.params.id;
-      console.log("delete ", id);
       const query = { _id: new ObjectId(id) };
       const result = await addAToy.deleteOne(query);
       res.send(result);
